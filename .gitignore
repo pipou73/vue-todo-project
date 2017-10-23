@@ -2,3 +2,5 @@
 !/build/.gitkeep
 
 /node_modules
+
+.idea

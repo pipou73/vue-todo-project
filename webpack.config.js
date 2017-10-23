@@ -23,9 +23,10 @@ Encore
     // what's the public path to this directory (relative to your project's document root dir)
     .setPublicPath(public_path)
 
-    // will output as web/build/app.js
-
+    // will output as build/app.js
     .addEntry('app', path.join(js_path, '/app.js'))
+
+    .enableVueLoader()
 
     .enableSourceMaps(!Encore.isProduction())
 
