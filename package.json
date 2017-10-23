@@ -1,0 +1,21 @@
+{
+  "name": "webpack-vuejs",
+  "version": "0.0.1",
+  "description": "webpack configuration for VueJS",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@symfony/webpack-encore": "^0.15.1",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.0"
+  },
+  "scripts": {
+    "encore.dev": "encore dev",
+    "encore.dev-server": "encore dev-server --hot",
+    "encore.prod": "encore production",
+    "encore.watch": "encore dev --watch"
+  },
+  "author": "Sapiens RWD",
+  "license": "MIT"
+}
