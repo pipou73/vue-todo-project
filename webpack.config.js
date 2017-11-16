@@ -24,7 +24,7 @@ Encore
     .setPublicPath(public_path)
 
     // will output as build/app.js
-    .addEntry('app', path.join(js_path, '/app.js'))
+    .addEntry('app', path.join(js_path, '/index.vue'))
 
     .enableVueLoader()
 
