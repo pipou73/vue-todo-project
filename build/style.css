@@ -33,7 +33,7 @@ button {
 }
 .tasks__item__toggle {
     cursor: pointer;
-    width: 100%;
+    width: 85%;
     text-align: left;
     padding: 0.85em 2.25em 0.85em 1em;
     background-color: rgba(0,0,0,0.05);
@@ -53,6 +53,14 @@ button {
     border-color: rgba(0,128,0,0.3);
 }
 .tasks__item__remove {
+    position: absolute;
+    height: 100%;
+    top: 50%;
+    right: 7%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+.tasks__item__edit {
     position: absolute;
     height: 100%;
     top: 50%;

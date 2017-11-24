@@ -1,5 +1,5 @@
 <template id="task-list">
-    <section class="tasks">
+    <section class="tasks" @click.self="clearAllEdit">
         <h1>
             Tasks
             <transition name="fade">
@@ -40,8 +40,10 @@
             <task-item v-for="(task, index) in tasks"
                        @remove="removeTask(index)"
                        @complete="completeTask(task)"
+                       @edit="toggleEdit(index)"
+                       @save="(payload) => { saveTask(payload, index) }"
                        :task="task"
-                       :key="task"
+                       :key="index"
             ></task-item>
         </transition-group>
     </section>
@@ -49,21 +51,36 @@
 
 <script>
 import Vue from 'vue';
-import taskItem from './taskItem.vue'
+import TaskItem from './taskItem.vue'
+import uuidv1 from 'uuid/v1'
+import { mapGetters, mapActions } from 'vuex'
 
-Vue.component('task-list', {
+export default Vue.component('task-list', {
+    name: 'TaskList',
     template: '#task-list',
-    props: {
-        tasks: {default: []}
-    },
     data() {
         return {
             newTask: '',
-            incomplete: false,
+            idTask: null,
+            tasks : [
+                {
+                    id: uuidv1(),
+                    title: 'Make todo list',
+                    completed: true,
+                    edited: false
+                },
+                {
+                    id: uuidv1(),
+                    title: 'Go skydiving',
+                    completed: false,
+                    edited: false
+                }
+            ]
+
         };
     },
     components: {
-        'task-item': taskItem
+        TaskItem
     },
     computed: {
         incomplete() {
@@ -74,14 +91,20 @@ Vue.component('task-list', {
         addTask() {
             if (this.newTask) {
                 this.tasks.push({
+                    id: uuidv1(),
                     title: this.newTask,
-                    completed: false
+                    completed: false,
+                    edited: false
                 });
                 this.newTask = '';
             }
         },
+        editTask(task) {
+            this.newTask = task.title;
+            this.idTask  = task.id;
+        },
         completeTask(task) {
-            task.completed = ! task.completed;
+            task.completed = !task.completed;
         },
         removeTask(index) {
             this.tasks.splice(index, 1);
@@ -92,12 +115,30 @@ Vue.component('task-list', {
         clearAll() {
             this.tasks = [];
         },
-
         inProgress(task) {
             return ! this.isCompleted(task);
         },
         isCompleted(task) {
             return task.completed;
+        },
+        toggleEdit(index) {
+            const task = this.tasks[index];
+            task.edited = !task.edited;
+        },
+        saveTask(payload, saveIndex) {
+            this.tasks = this.tasks.map((task, index) => {
+                if (index === saveIndex) {
+                    return { ...task,
+                        title: payload.title,
+                        edited: payload.edited
+                    };
+                }
+
+                return task;
+            });
+        },
+        clearAllEdit() {
+            this.tasks = this.tasks.forEach((task) => task.edited = false);
         }
     }
 });

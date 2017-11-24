@@ -1,25 +1,14 @@
 <script>
     import Vue from 'vue';
-    import taskList from './taskList.vue'
-//    import taskList from './taskList.vue'
-
+    import App from './component/App.vue'
+    import store from './store'
 
     new Vue({
         el: '#app',
-        data: {
-            tasks: [
-                {
-                    title: 'Make todo list',
-                    completed: true
-                },
-                {
-                    title: 'Go skydiving',
-                    completed: false
-                }
-            ]
-        },
+        store: store,
+        render: h => h(App),
         components: {
-            'task-list': taskList
+            App
         }
     });
 </script>
