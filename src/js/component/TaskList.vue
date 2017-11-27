@@ -84,7 +84,9 @@ export default Vue.component('task-list', {
     },
     computed: {
         incomplete() {
-            return this.tasks.filter(this.inProgress).length;
+            if (!!this.tasks) {
+                return this.tasks.filter(this.inProgress).length;
+            }
         }
     },
     methods: {
@@ -110,7 +112,9 @@ export default Vue.component('task-list', {
             this.tasks.splice(index, 1);
         },
         clearCompleted() {
-            this.tasks = this.tasks.filter(this.inProgress);
+            if (!!this.tasks) {
+                this.tasks = this.tasks.filter(this.inProgress);
+            }
         },
         clearAll() {
             this.tasks = [];
@@ -138,7 +142,7 @@ export default Vue.component('task-list', {
             });
         },
         clearAllEdit() {
-            this.tasks = this.tasks.forEach((task) => task.edited = false);
+            this.tasks.forEach((task) => task.edited = false);
         }
     }
 });
