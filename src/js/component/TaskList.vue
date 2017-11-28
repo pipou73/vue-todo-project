@@ -3,19 +3,19 @@
         <h1>
             Tasks
             <transition name="fade">
-                <small v-if="incomplete">({{ incomplete }})</small>
+                <small v-if="inComplete">({{ inComplete }})</small>
             </transition>
-
+            - {{ getCurrentGroupName() }}
         </h1>
         <div class="tasks__new input-group">
             <input type="text"
                    class="input-group-field"
                    v-model="newTask"
-                   @keyup.enter="addTask"
+                   @keyup.enter="addTask({ title : newTask })"
                    placeholder="New task"
             >
             <span class="input-group-button">
-          <button @click="addTask"
+          <button @click="addTask({ title : newTask }), clearInput()"
                   class="button"
           >
             <i class="fa fa-plus"></i> Add
@@ -30,119 +30,56 @@
                 <i class="fa fa-check"></i> Clear Completed
             </button>
             <button class="button alert small"
-                    @click="clearAll"
+                    @click="clearAllByGroup"
             >
                 <i class="fa fa-trash"></i> Clear All
             </button>
         </div>
 
         <transition-group name="fade" tag="ul" class="tasks__list no-bullet">
-            <task-item v-for="(task, index) in tasks"
-                       @remove="removeTask(index)"
-                       @complete="completeTask(task)"
-                       @edit="toggleEdit(index)"
-                       @save="(payload) => { saveTask(payload, index) }"
+            <task-item v-for="(task, index) in getTasks()"
+                       @remove="removeTask({ id : task.id })"
+                       @complete="completeTask({ id : task.id })"
+                       @edit="toggleTaskEdit({ id : task.id })"
+                       @save="(payload) => {saveTask({ payload, id : task.id })}"
                        :task="task"
                        :key="index"
             ></task-item>
         </transition-group>
     </section>
 </template>
-
+<!--@save="(payload) => { saveTask(payload, index) }"-->
 <script>
 import Vue from 'vue';
 import TaskItem from './taskItem.vue'
 import uuidv1 from 'uuid/v1'
-import { mapGetters, mapActions } from 'vuex'
+import store from '../store/index'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default Vue.component('task-list', {
     name: 'TaskList',
     template: '#task-list',
+    store,
     data() {
         return {
             newTask: '',
             idTask: null,
-            tasks : [
-                {
-                    id: uuidv1(),
-                    title: 'Make todo list',
-                    completed: true,
-                    edited: false
-                },
-                {
-                    id: uuidv1(),
-                    title: 'Go skydiving',
-                    completed: false,
-                    edited: false
-                }
-            ]
-
         };
     },
     components: {
         TaskItem
     },
     computed: {
-        incomplete() {
-            if (!!this.tasks) {
-                return this.tasks.filter(this.inProgress).length;
-            }
-        }
+        ...mapGetters({
+            inComplete: 'incomplete',
+        })
     },
     methods: {
-        addTask() {
-            if (this.newTask) {
-                this.tasks.push({
-                    id: uuidv1(),
-                    title: this.newTask,
-                    completed: false,
-                    edited: false
-                });
-                this.newTask = '';
-            }
-        },
-        editTask(task) {
-            this.newTask = task.title;
-            this.idTask  = task.id;
-        },
-        completeTask(task) {
-            task.completed = !task.completed;
-        },
-        removeTask(index) {
-            this.tasks.splice(index, 1);
-        },
-        clearCompleted() {
-            if (!!this.tasks) {
-                this.tasks = this.tasks.filter(this.inProgress);
-            }
-        },
-        clearAll() {
-            this.tasks = [];
-        },
-        inProgress(task) {
-            return ! this.isCompleted(task);
-        },
-        isCompleted(task) {
-            return task.completed;
-        },
-        toggleEdit(index) {
-            const task = this.tasks[index];
-            task.edited = !task.edited;
-        },
-        saveTask(payload, saveIndex) {
-            this.tasks = this.tasks.map((task, index) => {
-                if (index === saveIndex) {
-                    return { ...task,
-                        title: payload.title,
-                        edited: payload.edited
-                    };
-                }
-
-                return task;
-            });
-        },
-        clearAllEdit() {
-            this.tasks.forEach((task) => task.edited = false);
+        ...mapActions([ 'addTask', 'completeTask', 'removeTask', 'clearCompleted', 'saveTask', 'clearAllEdit']),
+        ...mapGetters([ 'getTasks', 'inProgress', 'isCompleted', 'getCurrentGroupName']),
+        ...mapMutations([ 'clearAll', 'toggleTaskEdit', 'clearAllByGroup']),
+        clearInput () {
+            this.newTask = '';
         }
     }
 });

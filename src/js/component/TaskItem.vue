@@ -28,7 +28,7 @@
                 <i class="fa fa-edit" ></i>
             </button>
             <button v-if="task.edited" class="button success"
-                    @click="(e) => sendTask(e, task)"
+                    @click="$emit('save', { title: task.title })"
             >
                 <i class="fa fa-save" ></i>
             </button>
