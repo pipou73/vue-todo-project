@@ -32,7 +32,11 @@ button {
 .tasks__item {
     margin-bottom: 0.5em;
     position: relative;
+
 }
+
+
+
 .tasks__item__toggle {
     cursor: pointer;
     width: 85%;
@@ -106,15 +110,20 @@ button {
     background-color: rgba(0,0,0,0.1);
     border-color: rgba(0,0,0,0.15);
 }
-.groups__item__toggle--current {
+.groups__item__toggle--selected {
     font-weight: bold;
     background-color: rgba(0,128,0,0.15);
     border-color: rgba(0,128,0,0.2);
 }
-.groups__item__toggle--current:hover {
+.groups__item__toggle--selected:hover {
     background-color: rgba(0,128,0,0.25);
     border-color: rgba(0,128,0,0.3);
 }
+
+.groups__item__toggle--completed {
+    text-decoration: line-through;
+}
+
 .groups__item__remove {
     position: absolute;
     height: 100%;
@@ -133,4 +142,9 @@ button {
 }
 .groups__item__remove i {
     vertical-align: middle;
+}
+
+.dragged {
+    opacity: 0.4;
+    color: black;
 }

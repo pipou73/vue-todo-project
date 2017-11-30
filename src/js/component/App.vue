@@ -1,19 +1,14 @@
 <template>
-    <div>
-        <groupList></groupList>
-        <taskList></taskList>
-    </div>
+        <GrpList></GrpList>
 </template>
 
 <script>
     import Vue from 'vue';
-    import GroupList from './GroupList.vue';
-    import TaskList from './TaskList.vue';
+    import GrpList from './GrpList.vue';
 
     export default Vue.component('app', {
         components: {
-            GroupList,
-            TaskList
+            GrpList
         }
     });
 </script>

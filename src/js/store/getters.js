@@ -1,10 +1,21 @@
 /**
- * get task
+ *
  * @param state
  * @returns {Array}
  */
 const getTasks = (state) => {
-        return state.tasks.filter((task) => task.group === state.currentGroup);
+    return state.tasks
+}
+
+/**
+ *
+ * @param state
+ * @returns {function({id: *}): Array.<*>}
+ */
+const  getTasksByGrp = (state) => {
+    return ({id}) => state.tasks.filter(item => {
+        return item.group === id
+    }).sort((a, b) => a.position > b.position);
 }
 
 /**
@@ -21,7 +32,7 @@ const getGroups = (state) => {
  * @param state
  */
 const getCurrentGroup = (state) => {
-    return state.currentGroup
+    return state.groups.find((group) => group.id === state.currentGroup);
 }
 
 /**
@@ -29,7 +40,7 @@ const getCurrentGroup = (state) => {
  * @param state
  */
 const getCurrentGroupName = (state) => {
-    const group = state.groups.find((group) => group.id === getCurrentGroup(state))
+    const group = getCurrentGroup(state)
     if (!!group) {
         return group.title;
     }
@@ -74,5 +85,6 @@ export default {
     incomplete,
     getGroups,
     getCurrentGroup,
-    getCurrentGroupName
+    getCurrentGroupName,
+    getTasksByGrp
 }

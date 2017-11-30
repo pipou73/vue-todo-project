@@ -6,13 +6,14 @@ import { findById } from '../api/index.js'
  * @param state
  * @param title
  */
-const addToTaskList = (state, {title}) => {
+const addToTaskList = (state, {title, groupId}) => {
     state.tasks.push({
         id: uuidv1(),
         title: title,
         completed: false,
         edited: false,
-        group: state.currentGroup
+        group: groupId,
+        position: (state.tasks.filter((task) => task.group === groupId).length + 1)
     });
 }
 
@@ -25,7 +26,8 @@ const addToGroupList = (state, {title}) => {
     state.groups.push({
         id: uuidv1(),
         title: title,
-        edited: false
+        edited: false,
+        show: false
     });
 }
 
@@ -56,8 +58,8 @@ const removeToTaskList = (state, { id }) => {
  *
  * @param state
  */
-const clearCompleteTaskList =  (state, {}) => {
-    state.tasks = state.tasks.filter((task) => !task.completed);
+const clearCompleteTaskList =  (state, { groupId }) => {
+    state.tasks = state.tasks.filter((task) => !task.completed && task.group === groupId);
 }
 
 /**
@@ -66,6 +68,14 @@ const clearCompleteTaskList =  (state, {}) => {
  */
 const clearAll = (state, {}) => {
     state.tasks = [];
+}
+/**
+ *
+ * @param state
+ * @param groups
+ */
+const updateGroupList = (state, groups) => {
+    state.groups = groups;
 }
 
 /**
@@ -113,10 +123,31 @@ const setCurrentGroup = (state, { id}) => {
  * @param state
  * @param id
  */
-const clearAllByGroup = (state, { }) => {
-    state.tasks =  state.tasks.filter((task) => task.group !== state.currentGroup)
+const clearAllByGroup = (state, { groupId }) => {
+    state.tasks =  state.tasks.filter((task) => task.group !== groupId)
 }
 
+/**
+ *
+ * @param state
+ */
+const toggleGroupShow = (state, { id }) => {
+    state.groups.forEach((group) => {
+        group.show  = group.id === id
+    })
+}
+/**
+ *
+ * @param state
+ * @param id
+ * @param position
+ */
+const setTaskPosition = (state, {id, position }) => {
+    let task = findById(state.tasks, id)
+    if (!!task) {
+        task.position = position
+    }
+}
 
 export default {
     addToTaskList,
@@ -129,6 +160,9 @@ export default {
     removeTasksEdit,
     addToGroupList,
     setCurrentGroup,
-    clearAllByGroup
+    clearAllByGroup,
+    updateGroupList,
+    toggleGroupShow,
+    setTaskPosition
 }
 

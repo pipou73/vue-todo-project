@@ -1,6 +1,7 @@
 <template id="task-item">
     <li class="tasks__item input-group">
-        <button v-if="!task.edited" :class="className"
+        <button v-if="!task.edited"
+                :class="className"
                 @click.self="$emit('complete')"
         >
             {{ task.title }}
@@ -55,6 +56,9 @@
         methods: {
             sendTask (e, task) {
                 this.$emit('save', { title : this.task.title, edited : false });
+            },
+            sort(e) {
+                alert('tt');
             }
         }
 

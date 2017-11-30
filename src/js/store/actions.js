@@ -3,9 +3,9 @@ import { findById } from '../api/index.js'
  * @param commit
  * @param title
  */
-const addTask = ( {commit},  { title } ) => {
+const addTask = ( {commit},  { title, groupId } ) => {
     if (!!title) {
-        commit('addToTaskList', { title });
+        commit('addToTaskList', { title, groupId });
     }
 }
 
@@ -28,6 +28,7 @@ const setCurrentGroup = ({commit, state}, { id }) => {
     let group = findById(state.groups, id)
     if (!!group) {
         commit('setCurrentGroup', { id })
+        commit('toggleGroupShow', { id })
     }
 }
 
@@ -45,8 +46,8 @@ const completeTask = ({ commit }, { id }) => {
  *
  * @param commit
  */
-const clearCompleted = ({ commit }, { }) => {
-    commit('clearCompleteTaskList', {});
+const clearCompleted = ({ commit }, { groupId }) => {
+    commit('clearCompleteTaskList', { groupId });
 }
 
 /**
@@ -69,6 +70,14 @@ const clearAllEdit = ({commit, state}, {}) => {
     commit('removeTasksEdit', {  })
 }
 
+/**
+ *
+ */
+const pushTasksPosition = ({commit}, { tasks }) => {
+    tasks.forEach((task, index) => {
+        commit('setTaskPosition', { id : task.id, position : index })
+    })
+}
 
 export default {
     addTask,
@@ -78,5 +87,6 @@ export default {
     saveTask,
     clearAllEdit,
     addGroup,
-    setCurrentGroup
+    setCurrentGroup,
+    pushTasksPosition
 }

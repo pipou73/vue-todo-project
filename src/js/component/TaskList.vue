@@ -1,88 +1,98 @@
 <template id="task-list">
     <section class="tasks" @click.self="clearAllEdit">
-        <h1>
-            Tasks
-            <transition name="fade">
-                <small v-if="inComplete">({{ inComplete }})</small>
-            </transition>
-            - {{ getCurrentGroupName() }}
-        </h1>
         <div class="tasks__new input-group">
             <input type="text"
-                   class="input-group-field"
-                   v-model="newTask"
-                   @keyup.enter="addTask({ title : newTask })"
-                   placeholder="New task"
+                class="input-group-field"
+                v-model="newTask"
+                @keyup.enter="addTask({ title : newTask, groupId : group.id })"
+                placeholder="New task"
             >
             <span class="input-group-button">
-          <button @click="addTask({ title : newTask }), clearInput()"
-                  class="button"
-          >
-            <i class="fa fa-plus"></i> Add
-          </button>
-        </span>
+                <button
+                        @click="addTask({ title : newTask, groupId : group.id }), clearInput()"
+                        class="button"
+                >
+                    <i class="fa fa-plus"></i> Add
+                </button>
+            </span>
         </div>
-
         <div class="tasks__clear button-group pull-right">
             <button class="button warning small"
-                    @click="clearCompleted"
+                    @click="clearCompleted({groupId : group.id})"
             >
                 <i class="fa fa-check"></i> Clear Completed
             </button>
             <button class="button alert small"
-                    @click="clearAllByGroup"
+                    @click="clearAllByGroup({groupId : group.id})"
             >
                 <i class="fa fa-trash"></i> Clear All
             </button>
         </div>
-
-        <transition-group name="fade" tag="ul" class="tasks__list no-bullet">
-            <task-item v-for="(task, index) in getTasks()"
-                       @remove="removeTask({ id : task.id })"
-                       @complete="completeTask({ id : task.id })"
-                       @edit="toggleTaskEdit({ id : task.id })"
-                       @save="(payload) => {saveTask({ payload, id : task.id })}"
-                       :task="task"
-                       :key="index"
-            ></task-item>
-        </transition-group>
+        <draggable v-model="tasks" :options="{draggable:'.tasks__item'}" :end="onMoveCallback">
+            <transition-group name="fade" tag="ul" class="tasks__list no-bullet">
+                <task-item v-for="(task, index) in tasks"
+                           @remove="removeTask({ id : task.id })"
+                           @complete="completeTask({ id : task.id })"
+                           @edit="toggleTaskEdit({ id : task.id })"
+                           @save="(payload) => {saveTask({ payload, id : task.id })}"
+                           :task="task"
+                           :key="index"
+                ></task-item>
+            </transition-group>
+        </draggable>
     </section>
 </template>
-<!--@save="(payload) => { saveTask(payload, index) }"-->
 <script>
-import Vue from 'vue';
-import TaskItem from './taskItem.vue'
-import uuidv1 from 'uuid/v1'
-import store from '../store/index'
-import { mapGetters, mapActions, mapMutations } from 'vuex'
+    import Vue from 'vue';
+    import TaskItem from './TaskItem.vue'
+    import uuidv1 from 'uuid/v1'
+    import store from '../store/index'
+    import { mapGetters, mapActions, mapMutations } from 'vuex'
+    import draggable from 'vuedraggable'
 
-export default Vue.component('task-list', {
-    name: 'TaskList',
-    template: '#task-list',
-    store,
-    data() {
-        return {
-            newTask: '',
-            idTask: null,
-        };
-    },
-    components: {
-        TaskItem
-    },
-    computed: {
-        ...mapGetters({
-            inComplete: 'incomplete',
-        })
-    },
-    methods: {
-        ...mapActions([ 'addTask', 'completeTask', 'removeTask', 'clearCompleted', 'saveTask', 'clearAllEdit']),
-        ...mapGetters([ 'getTasks', 'inProgress', 'isCompleted', 'getCurrentGroupName']),
-        ...mapMutations([ 'clearAll', 'toggleTaskEdit', 'clearAllByGroup']),
-        clearInput () {
-            this.newTask = '';
+    export default Vue.component('task-list', {
+        name: 'TaskList',
+        template: '#task-list',
+        store,
+        components: {
+            TaskItem,
+            draggable,
+        },
+        data() {
+            return {
+                newTask: '',
+            };
+        },
+        props: ['group'],
+        computed: {
+            ...mapGetters({
+                inComplete: 'incomplete',
+            }),
+            tasks: {
+                get() {
+                    return this.$store.getters.getTasksByGrp({...this.group})
+                },
+                set(value) {
+                    this.pushTasksPosition({ tasks : value});
+                }
+            }
+        },
+        methods: {
+            ...mapActions([ 'addTask', 'completeTask', 'removeTask', 'clearCompleted', 'saveTask', 'clearAllEdit', 'pushTasksPosition']),
+            ...mapGetters([ 'getTasksByGrp', 'inProgress', 'isCompleted', 'getCurrentGroupName']),
+            ...mapMutations([ 'clearAll', 'toggleTaskEdit', 'clearAllByGroup']),
+            clearInput () {
+                this.newTask = '';
+            },
+            onMoveCallback(evt, originalEvent){
+                // return false; — for cancel
+                console.log('evt', evt)
+            },
+            checkMove: function(evt){
+                return (evt.draggedContext.element.name!=='apple');
+            }
         }
-    }
-});
+    });
 
 </script>
 
