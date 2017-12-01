@@ -1,4 +1,6 @@
 import { findById } from '../api/index.js'
+import { getTasksByGrp } from './getters'
+
 /**
  * @param commit
  * @param title
@@ -16,6 +18,17 @@ const addTask = ( {commit},  { title, groupId } ) => {
 const addGroup = ( {commit},  { title } ) => {
     if (!!title) {
         commit('addToGroupList', { title });
+    }
+}
+
+const removeGroup = ({commit, state}, {id}) => {
+    if (!!id) {
+        commit('removeToGrpList', { id });
+        state.tasks.filter(item => {
+            return item.group === id
+        }).forEach((task) => {
+            commit('removeToTaskList', {id : task.id });
+        })
     }
 }
 
@@ -88,5 +101,6 @@ export default {
     clearAllEdit,
     addGroup,
     setCurrentGroup,
-    pushTasksPosition
+    pushTasksPosition,
+    removeGroup
 }

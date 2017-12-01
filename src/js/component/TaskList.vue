@@ -30,21 +30,22 @@
         </div>
         <draggable v-model="tasks" :options="{draggable:'.tasks__item'}" :end="onMoveCallback">
             <transition-group name="fade" tag="ul" class="tasks__list no-bullet">
-                <task-item v-for="(task, index) in tasks"
+                <item v-for="(task, index) in tasks"
                            @remove="removeTask({ id : task.id })"
                            @complete="completeTask({ id : task.id })"
                            @edit="toggleTaskEdit({ id : task.id })"
                            @save="(payload) => {saveTask({ payload, id : task.id })}"
-                           :task="task"
+                           :item="task"
+                           :base="'tasks'"
                            :key="index"
-                ></task-item>
+                ></item>
             </transition-group>
         </draggable>
     </section>
 </template>
 <script>
     import Vue from 'vue';
-    import TaskItem from './TaskItem.vue'
+    import Item from './Item.vue'
     import uuidv1 from 'uuid/v1'
     import store from '../store/index'
     import { mapGetters, mapActions, mapMutations } from 'vuex'
@@ -55,7 +56,7 @@
         template: '#task-list',
         store,
         components: {
-            TaskItem,
+            Item,
             draggable,
         },
         data() {
