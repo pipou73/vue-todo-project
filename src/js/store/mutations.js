@@ -59,7 +59,14 @@ const removeToTaskList = (state, { id }) => {
  * @param state
  */
 const clearCompleteTaskList =  (state, { groupId }) => {
-    state.tasks = state.tasks.filter((task) => !task.completed && task.group === groupId);
+    state.tasks = state.tasks.reduce((acc, task) => {
+        if (task.completed && task.group === groupId){
+            return acc;
+        }
+        acc.push(task);
+
+        return acc;
+    }, [])
 }
 
 /**

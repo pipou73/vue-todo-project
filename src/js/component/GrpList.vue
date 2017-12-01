@@ -18,19 +18,27 @@
               </button>
             </span>
         </div>
-        <draggable v-model="groups" :options="{draggable:'.groups__item', move: onMoveCallback}">
-            <transition-group name="fade" tag="ul" class="groups__list no-bullet">
-                <group-item v-for="(group, index) in groups"
-                            @remove="removeGroup({ id : group.id })"
-                            @selected="setCurrentGroup({ id : group.id })"
-                            :current="getCurrentGroup()"
-                            :group="group"
-                            :key="index"
-                ></group-item>
-            </transition-group>
-        </draggable>
-        <div v-if="!!currentGroup" >
-            <task-list :group="currentGroup"></task-list>
+        <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <draggable v-model="groups" :options="{draggable:'.groups__item', move: onMoveCallback}">
+                    <transition-group name="fade" tag="ul" class="groups__list no-bullet">
+                        <group-item v-for="(group, index) in groups"
+                                    @remove="removeGroup({ id : group.id })"
+                                    @selected="setCurrentGroup({ id : group.id })"
+                                    :current="getCurrentGroup()"
+                                    :group="group"
+                                    :key="index"
+                        ></group-item>
+                    </transition-group>
+                </draggable>
+            </div>
+            <div class="col-md-6">
+                <div v-if="!!currentGroup" >
+                    <task-list :group="currentGroup"></task-list>
+                </div>
+            </div>
+        </div>
         </div>
     </section>
 </template>

@@ -11,11 +11,11 @@ import mutations from './mutations'
 Vue.use(Vuex)
 
 const state = {
-    currentGroup: null,
+    currentGroup: '7ec00e82-d41f-11e7-a0e4-4dd6ca4d2af5',
     tasks: [
         {
             id: uuidv1(),
-            title: 'Make todo list',
+            title: 'Faire les courses',
             completed: true,
             edited: false,
             group: '7ec00e82-d41f-11e7-a0e4-4dd6ca4d2af5',
@@ -23,7 +23,7 @@ const state = {
         },
         {
             id: uuidv1(),
-            title: 'Go skydiving',
+            title: 'Faire le menage',
             completed: false,
             edited: false,
             group: '7ec00e82-d41f-11e7-a0e4-4dd6ca4d2af5',
@@ -33,13 +33,31 @@ const state = {
     groups: [
         {
             id: '7ec00e82-d41f-11e7-a0e4-4dd6ca4d2af5',
-            title: 'Group A',
+            title: 'Lundi',
+            edited: false,
+            show: true
+        },
+        {
+            id: uuidv1(),
+            title: 'Mardi',
             edited: false,
             show: false
         },
         {
             id: uuidv1(),
-            title: 'Group B',
+            title: 'Mercredi',
+            edited: false,
+            show: false
+        },
+        {
+            id: uuidv1(),
+            title: 'Jeudi',
+            edited: false,
+            show: false
+        },
+        {
+            id: uuidv1(),
+            title: 'Vendredi',
             edited: false,
             show: false
         }
