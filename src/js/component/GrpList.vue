@@ -23,13 +23,13 @@
             <div class="col-md-6">
                 <draggable v-model="groups" :options="{draggable:'.groups__item', move: onMoveCallback}">
                     <transition-group name="fade" tag="ul" class="groups__list no-bullet">
-                        <group-item v-for="(group, index) in groups"
+                        <item v-for="(group, index) in groups"
                                     @remove="removeGroup({ id : group.id })"
-                                    @selected="setCurrentGroup({ id : group.id })"
-                                    :current="getCurrentGroup()"
-                                    :group="group"
+                                    @complete="setCurrentGroup({ id : group.id })"
+                                    :item="group"
+                                    :base="'groups'"
                                     :key="index"
-                        ></group-item>
+                        ></item>
                     </transition-group>
                 </draggable>
             </div>
@@ -45,7 +45,7 @@
 <script>
 import Vue from 'vue';
 import TaskList from './TaskList.vue'
-import GroupItem from './GrpItem.vue'
+import Item from './Item.vue'
 import uuidv1 from 'uuid/v1'
 import store from '../store/index'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
@@ -62,7 +62,7 @@ export default Vue.component('grp-list', {
     },
     components: {
         draggable,
-        GroupItem,
+        Item,
         TaskList
     },
     computed: {
@@ -80,7 +80,7 @@ export default Vue.component('grp-list', {
         }
     },
     methods: {
-        ...mapActions([ 'addGroup', 'setCurrentGroup']),
+        ...mapActions([ 'addGroup', 'setCurrentGroup', 'removeGroup']),
         ...mapGetters([ 'getCurrentGroupName', 'getGroups', 'getCurrentGroup']),
         ...mapMutations([ 'clearAllByGroup']),
         clearInput () {

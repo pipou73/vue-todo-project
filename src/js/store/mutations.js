@@ -57,6 +57,16 @@ const removeToTaskList = (state, { id }) => {
 /**
  *
  * @param state
+ * @param id
+ */
+const removeToGrpList = (state, { id }) => {
+    const index = state.groups.findIndex((grp) => (grp.id === id));
+    state.groups.splice(index, 1);
+}
+
+/**
+ *
+ * @param state
  */
 const clearCompleteTaskList =  (state, { groupId }) => {
     state.tasks = state.tasks.reduce((acc, task) => {
@@ -170,6 +180,7 @@ export default {
     clearAllByGroup,
     updateGroupList,
     toggleGroupShow,
-    setTaskPosition
+    setTaskPosition,
+    removeToGrpList
 }
 
