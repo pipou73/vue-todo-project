@@ -28,7 +28,7 @@
                 <i class="fa fa-trash"></i> Clear All
             </button>
         </div>
-        <draggable v-model="tasks" :options="{draggable:'.tasks__item'}" :end="onMoveCallback">
+        <draggable v-model="tasks" :options="{draggable:'.tasks__item'}" >
             <transition-group name="fade" tag="ul" class="tasks__list no-bullet">
                 <item v-for="(task, index) in tasks"
                            @remove="removeTask({ id : task.id })"
@@ -64,14 +64,12 @@
                 newTask: '',
             };
         },
-        props: ['group'],
+        props: ['group', 'tasksList'],
         computed: {
-            ...mapGetters({
-                inComplete: 'incomplete',
-            }),
             tasks: {
                 get() {
-                    return this.$store.getters.getTasksByGrp({...this.group})
+                    //return this.tasksthis.$store.getters.getTasksByGrp({...this.group})
+                    return this.tasksList;
                 },
                 set(value) {
                     this.pushTasksPosition({ tasks : value});
@@ -79,18 +77,11 @@
             }
         },
         methods: {
-            ...mapActions([ 'addTask', 'completeTask', 'removeTask', 'clearCompleted', 'saveTask', 'clearAllEdit', 'pushTasksPosition']),
-            ...mapGetters([ 'getTasksByGrp', 'inProgress', 'isCompleted', 'getCurrentGroupName']),
+            ...mapActions(['addTask', 'completeTask', 'removeTask', 'clearCompleted', 'saveTask', 'clearAllEdit', 'pushTasksPosition']),
+            ...mapGetters([ 'getTasksByGrp', 'inProgress', 'isCompleted', 'getCurrentGroupName', 'is']),
             ...mapMutations([ 'clearAll', 'toggleTaskEdit', 'clearAllByGroup']),
             clearInput () {
                 this.newTask = '';
-            },
-            onMoveCallback(evt, originalEvent){
-                // return false; — for cancel
-                console.log('evt', evt)
-            },
-            checkMove: function(evt){
-                return (evt.draggedContext.element.name!=='apple');
             }
         }
     });

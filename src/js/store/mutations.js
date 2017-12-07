@@ -1,12 +1,39 @@
 import uuidv1 from 'uuid/v1'
 import { findById } from '../api/index.js'
+import * as type from './mutations-type'
+
+/**
+ * set todos
+ * @param {*} state 
+ * @param {*} todos 
+ */
+const setTasks = (state, tasks) => {
+    state.tasks = tasks
+}
+
+/**
+ * set todos
+ * @param {*} state 
+ * @param {*} todos 
+ */
+const setGroups = (state, groups) => {
+    state.groups = groups
+}
+/**
+ * 
+ * @param {*} state 
+ * @param {*} loading 
+ */
+const setLoading = (state, loading) => {
+    state.loading = loading
+}
 
 /**
  *
  * @param state
  * @param title
  */
-const addToTaskList = (state, {title, groupId}) => {
+const addTask = (state, {title, groupId}) => {
     state.tasks.push({
         id: uuidv1(),
         title: title,
@@ -14,7 +41,7 @@ const addToTaskList = (state, {title, groupId}) => {
         edited: false,
         group: groupId,
         position: (state.tasks.filter((task) => task.group === groupId).length + 1)
-    });
+    })
 }
 
 /**
@@ -22,25 +49,12 @@ const addToTaskList = (state, {title, groupId}) => {
  * @param state
  * @param title
  */
-const addToGroupList = (state, {title}) => {
+const addGroup = (state, {title}) => {
     state.groups.push({
         id: uuidv1(),
         title: title,
         edited: false,
         show: false
-    });
-}
-
-/**
- *
- * @param state
- * @param id
- */
-const completeToTaskList = (state, { id }) => {
-    state.tasks.forEach((task) => {
-        if (task.id === id) {
-            task.completed = !task.completed
-        }
     })
 }
 
@@ -49,9 +63,18 @@ const completeToTaskList = (state, { id }) => {
  * @param state
  * @param id
  */
-const removeToTaskList = (state, { id }) => {
-    const index = state.tasks.findIndex((task) => (task.id === id));
-    state.tasks.splice(index, 1);
+const removeTask = (state, { id }) => {
+    const index = state.tasks.findIndex((task) => (task.id === id))
+    state.tasks.splice(index, 1)
+}
+/**
+ *
+ * @param state
+ * @param id
+ */
+const removeGroup = (state, { id }) => {
+    const index = state.groups.findIndex((grp) => (grp.id === id))
+    state.groups.splice(index, 1)
 }
 
 /**
@@ -59,23 +82,27 @@ const removeToTaskList = (state, { id }) => {
  * @param state
  * @param id
  */
-const removeToGrpList = (state, { id }) => {
-    const index = state.groups.findIndex((grp) => (grp.id === id));
-    state.groups.splice(index, 1);
+const completedTask = (state, { id }) => {
+    state.tasks.forEach((task) => {
+        if (task.id === id) {
+            task.completed = !task.completed
+        }
+    })
 }
+
 
 /**
  *
  * @param state
  */
-const clearCompleteTaskList =  (state, { groupId }) => {
+const clearCompletedTasks =  (state, { groupId }) => {
     state.tasks = state.tasks.reduce((acc, task) => {
         if (task.completed && task.group === groupId){
-            return acc;
+            return acc
         }
-        acc.push(task);
+        acc.push(task)
 
-        return acc;
+        return acc
     }, [])
 }
 
@@ -83,17 +110,10 @@ const clearCompleteTaskList =  (state, { groupId }) => {
  *
  * @param state
  */
-const clearAll = (state, {}) => {
-    state.tasks = [];
+const clearTasks = (state) => {
+    state.tasks = []
 }
-/**
- *
- * @param state
- * @param groups
- */
-const updateGroupList = (state, groups) => {
-    state.groups = groups;
-}
+
 
 /**
  *
@@ -101,9 +121,9 @@ const updateGroupList = (state, groups) => {
  * @param payload
  * @param index
  */
-const saveTaskEdit = (state, { payload, id }) => {
-    const task = findById(state.tasks, id);
-    task.title  = payload.title
+const saveTask = (state, { payload, id }) => {
+    const task = findById(state.tasks, id)
+    task.title = payload.title
 }
 
 
@@ -112,8 +132,8 @@ const saveTaskEdit = (state, { payload, id }) => {
  * @param state
  * @param index
  */
-const removeTasksEdit = (state, {  }) => {
-    state.tasks.forEach((task) => (task.edited = false));
+const unEditedTask = (state) => {
+    state.tasks.forEach((task) => (task.edited = false))
 }
 
 /**
@@ -121,9 +141,9 @@ const removeTasksEdit = (state, {  }) => {
  * @param state
  * @param index
  */
-const toggleTaskEdit = (state, { id }) => {
-    const task = findById(state.tasks, id);
-    task.edited = !task.edited;
+const toggleTask = (state, { id }) => {
+    const task = findById(state.tasks, id)
+    task.edited = !task.edited
 }
 
 /**
@@ -132,7 +152,7 @@ const toggleTaskEdit = (state, { id }) => {
  * @param id
  */
 const setCurrentGroup = (state, { id}) => {
-    state.currentGroup = id;
+    state.currentGroup = id
 }
 
 /**
@@ -140,7 +160,7 @@ const setCurrentGroup = (state, { id}) => {
  * @param state
  * @param id
  */
-const clearAllByGroup = (state, { groupId }) => {
+const clearGroups = (state, { groupId }) => {
     state.tasks =  state.tasks.filter((task) => task.group !== groupId)
 }
 
@@ -148,39 +168,29 @@ const clearAllByGroup = (state, { groupId }) => {
  *
  * @param state
  */
-const toggleGroupShow = (state, { id }) => {
+const toggleGroup = (state, { id }) => {
     state.groups.forEach((group) => {
         group.show  = group.id === id
     })
 }
-/**
- *
- * @param state
- * @param id
- * @param position
- */
-const setTaskPosition = (state, {id, position }) => {
-    let task = findById(state.tasks, id)
-    if (!!task) {
-        task.position = position
-    }
-}
+
 
 export default {
-    addToTaskList,
-    completeToTaskList,
-    removeToTaskList,
-    clearCompleteTaskList,
-    clearAll,
-    toggleTaskEdit,
-    saveTaskEdit,
-    removeTasksEdit,
-    addToGroupList,
-    setCurrentGroup,
-    clearAllByGroup,
-    updateGroupList,
-    toggleGroupShow,
-    setTaskPosition,
-    removeToGrpList
+    [type.SET_CURRENT_GROUP] (state, payload) { setCurrentGroup(state, payload) },
+    [type.CLEAR_GROUPS] (state, payload) { clearGroups(state, payload) },
+    [type.TOOGLE_GROUP] (state, payload) { toggleGroup(state, payload) },
+    [type.UN_EDITED_TASKS] (state, payload) { unEditedTask(state, payload) },
+    [type.SAVE_TASKS] (state, payload) { saveTask(state, payload) },
+    [type.TOOGLE_TASK] (state, payload) { toggleTask(state, payload) },
+    [type.CLEAR_TASKS] (state, payload) { clearTasks(state, payload) },
+    [type.CLEAR_COMPLETED_TASK] (state, payload) { clearCompletedTasks(state, payload) },
+    [type.COMPLETED_TASK] (state, payload) { completedTask(state, payload) },
+    [type.REMOVE_TASK] (state, payload) { removeTask(state, payload) },
+    [type.REMOVE_GROUP] (state, payload) { removeGroup(state, payload) },
+    [type.ADD_GROUP] (state, payload) { addGroup(state, payload) },
+    [type.SET_TASKS] (state, payload) { setTasks(state, payload) },
+    [type.SET_GROUPS] (state, payload) { setGroups(state, payload) },
+    [type.SET_LOADING] (state, payload) { setLoading(state, payload) },
+    [type.ADD_TASK] (state, payload) { addTask(state, payload) }
 }
 

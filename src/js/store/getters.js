@@ -15,7 +15,7 @@ const getTasks = (state) => {
 const  getTasksByGrp = (state) => {
     return ({id}) => state.tasks.filter(item => {
         return item.group === id
-    }).sort((a, b) => a.position > b.position);
+    }).sort((a, b) => a.position > b.position)
 }
 
 /**
@@ -24,7 +24,7 @@ const  getTasksByGrp = (state) => {
  * @returns {Array}
  */
 const getGroups = (state) => {
-    return state.groups;
+    return state.groups
 }
 
 /**
@@ -32,7 +32,7 @@ const getGroups = (state) => {
  * @param state
  */
 const getCurrentGroup = (state) => {
-    return state.groups.find((group) => group.id === state.currentGroup);
+    return state.groups.find((group) => group.id === state.currentGroup)
 }
 
 /**
@@ -41,11 +41,11 @@ const getCurrentGroup = (state) => {
  */
 const getCurrentGroupName = (state) => {
     const group = getCurrentGroup(state)
-    if (!!group) {
-        return group.title;
+    if (group) {
+        return group.title
     }
 
-    return null;
+    return null
 }
 
 /**
@@ -55,7 +55,7 @@ const getCurrentGroupName = (state) => {
  * @returns {boolean}
  */
 export const inProgress = (state, task) => {
-    return !isCompleted(state, task);
+    return !isCompleted(state, task)
 }
 
 /**
@@ -64,7 +64,7 @@ export const inProgress = (state, task) => {
  * @returns {Number}
  */
 const incomplete = (state) => {
-    return getTasks(state).filter((task) => inProgress(state, task)).length;
+    return getTasks(state).filter((task) => inProgress(state, task)).length
 }
 
 /**
@@ -74,7 +74,14 @@ const incomplete = (state) => {
  * @returns {boolean|*}
  */
 export const isCompleted = (state, task) => {
-    return task.completed;
+    return task.completed
+}
+/**
+ * 
+ * @param {*} state 
+ */
+export const isLoading = (state) => {
+    return state.isLoading
 }
 
 
@@ -86,5 +93,6 @@ export default {
     getGroups,
     getCurrentGroup,
     getCurrentGroupName,
-    getTasksByGrp
+    getTasksByGrp,
+    isLoading
 }

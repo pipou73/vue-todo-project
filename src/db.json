@@ -1,0 +1,52 @@
+{
+    "tasks": [
+        {
+            "id": "5cd2f470-d8c7-11e7-bd03-2bfa210668bb",
+            "title": "Faire les courses",
+            "completed": true,
+            "edited": false,
+            "group": "7ec00e82-d41f-11e7-a0e4-4dd6ca4d2af5",
+            "position": 0
+        },
+        {
+            "id": "5cd2f471-d8c7-11e7-bd03-2bfa210668bb",
+            "title": "Faire le menage",
+            "completed": false,
+            "edited": false,
+            "group": "7ec00e82-d41f-11e7-a0e4-4dd6ca4d2af5",
+            "position": 1
+        }
+    ],
+    "groups": [
+        {
+            "id": "7ec00e82-d41f-11e7-a0e4-4dd6ca4d2af5",
+            "title": "Lundi",
+            "edited": false,
+            "show": true
+        },
+        {
+            "id": "5cd2f472-d8c7-11e7-bd03-2bfa210668bb",
+            "title": "Mardi",
+            "edited": false,
+            "show": false
+        },
+        {
+            "id": "5cd2f473-d8c7-11e7-bd03-2bfa210668bb",
+            "title": "Mercredi",
+            "edited": false,
+            "show": false
+        },
+        {
+            "id": "5cd2f474-d8c7-11e7-bd03-2bfa210668bb",
+            "title": "Jeudi",
+            "edited": false,
+            "show": false
+        },
+        {
+            "id": "5cd2f475-d8c7-11e7-bd03-2bfa210668bb",
+            "title": "Vendredi",
+            "edited": false,
+            "show": false
+        }
+    ]
+}

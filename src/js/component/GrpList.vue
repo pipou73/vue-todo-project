@@ -18,27 +18,30 @@
               </button>
             </span>
         </div>
-        <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <draggable v-model="groups" :options="{draggable:'.groups__item', move: onMoveCallback}">
-                    <transition-group name="fade" tag="ul" class="groups__list no-bullet">
-                        <item v-for="(group, index) in groups"
-                                    @remove="removeGroup({ id : group.id })"
-                                    @complete="setCurrentGroup({ id : group.id })"
-                                    :item="group"
-                                    :base="'groups'"
-                                    :key="index"
-                        ></item>
-                    </transition-group>
-                </draggable>
-            </div>
-            <div class="col-md-6">
-                <div v-if="!!currentGroup" >
-                    <task-list :group="currentGroup"></task-list>
+        <div  class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <draggable v-model="groups" :options="{draggable:'.groups__item'}">
+                        <transition-group name="fade" tag="ul" class="groups__list no-bullet">
+                            <item v-for="(group, index) in groups"
+                                        @remove="removeGroup({ id : group.id })"
+                                        @complete="setCurrentGroup({ id : group.id })"
+                                        :item="group"
+                                        :base="'groups'"
+                                        :key="index"
+                            ></item>
+                        </transition-group>
+                    </draggable>
+                </div>
+                <div class="col-md-6">
+                    <div v-if="currentGroup" >
+                        <task-list 
+                        :group="currentGroup"
+                        :tasksList="getTasksByGroup(currentGroup)"
+                        ></task-list>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </section>
 </template>
@@ -65,9 +68,11 @@ export default Vue.component('grp-list', {
         Item,
         TaskList
     },
+    created () {
+        this.$store.dispatch('loadData')
+    },
     computed: {
         ...mapGetters({
-            inComplete: 'incomplete',
             currentGroup: 'getCurrentGroup'
         }),
         groups: {
@@ -80,16 +85,16 @@ export default Vue.component('grp-list', {
         }
     },
     methods: {
-        ...mapActions([ 'addGroup', 'setCurrentGroup', 'removeGroup']),
-        ...mapGetters([ 'getCurrentGroupName', 'getGroups', 'getCurrentGroup']),
+        ...mapActions([ 'addGroup', 'setCurrentGroup', 'removeGroup', 'loadData']),
+        ...mapGetters([ 'isLoading', 'getCurrentGroupName', 'getGroups', 'getCurrentGroup', 'getTasksByGrp']),
         ...mapMutations([ 'clearAllByGroup']),
         clearInput () {
             this.newGroup = '';
         },
-        onMoveCallback(evt, originalEvent){
-            // return false; — for cancel
-            console.log('evt', evt)
+        getTasksByGroup(group) {
+            return this.getTasksByGrp()({ ...group })
         }
+
     }
 });
 

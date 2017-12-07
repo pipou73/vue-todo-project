@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "description": "webpack configuration for VueJS",
   "dependencies": {
+    "json-server": "^0.12.1",
+    "rxjs": "^5.5.2",
     "uuid": "^3.1.0",
     "vue": "^2.5.2",
     "vuedraggable": "^2.15.0"
@@ -20,7 +22,8 @@
     "encore.dev": "encore dev",
     "encore.dev-server": "encore dev-server --hot",
     "encore.prod": "encore production",
-    "encore.watch": "encore dev --watch"
+    "encore.watch": "encore dev --watch",
+    "json.db": "json-server --static . --watch ./src/db.json"
   },
   "author": "Sapiens RWD",
   "license": "MIT"

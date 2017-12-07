@@ -1,13 +1,37 @@
 import { findById } from '../api/index.js'
-import { getTasksByGrp } from './getters'
+import * as type from './mutations-type'
+/**
+ * load store
+ * @param {*} param0 
+ */
+const loadData = ({ commit }) => {
+    commit(type.SET_LOADING, true)
+    fetch('http://localhost:3000/groups',{
+        method: 'GET',
+        credentials: 'include',
+    })
+        .then(r => r.json())
+        .then(groups => {
+            commit(type.SET_GROUPS, groups)
+            fetch('http://localhost:3000/tasks',{
+                method: 'GET',
+                credentials: 'include',
+            })
+                .then(r => r.json())
+                .then(tasks => {
+                    commit(type.SET_TASKS, tasks)
+                    commit(type.SET_LOADING, false)
+                })
+        })
+}
 
 /**
  * @param commit
  * @param title
  */
 const addTask = ( {commit},  { title, groupId } ) => {
-    if (!!title) {
-        commit('addToTaskList', { title, groupId });
+    if (title) {
+        commit(type.ADD_TASK, { title, groupId })
     }
 }
 
@@ -16,18 +40,18 @@ const addTask = ( {commit},  { title, groupId } ) => {
  * @param title
  */
 const addGroup = ( {commit},  { title } ) => {
-    if (!!title) {
-        commit('addToGroupList', { title });
+    if (title) {
+        commit(type.ADD_GROUP, { title })
     }
 }
 
 const removeGroup = ({commit, state}, {id}) => {
-    if (!!id) {
-        commit('removeToGrpList', { id });
+    if (id) {
+        commit(type.REMOVE_GROUP, { id })
         state.tasks.filter(item => {
             return item.group === id
         }).forEach((task) => {
-            commit('removeToTaskList', {id : task.id });
+            commit(type.REMOVE_TASK, {id : task.id })
         })
     }
 }
@@ -39,9 +63,9 @@ const removeGroup = ({commit, state}, {id}) => {
  */
 const setCurrentGroup = ({commit, state}, { id }) => {
     let group = findById(state.groups, id)
-    if (!!group) {
-        commit('setCurrentGroup', { id })
-        commit('toggleGroupShow', { id })
+    if (group) {
+        commit(type.SET_CURRENT_GROUP, { id })
+        commit(type.TOOGLE_GROUP, { id })
     }
 }
 
@@ -50,8 +74,8 @@ const setCurrentGroup = ({commit, state}, { id }) => {
  * @param taskId
  */
 const completeTask = ({ commit }, { id }) => {
-    if (!!id) {
-        commit('completeToTaskList', { id });
+    if (id) {
+        commit(type.COMPLETED_TASK, { id })
     }
 }
 
@@ -60,7 +84,7 @@ const completeTask = ({ commit }, { id }) => {
  * @param commit
  */
 const clearCompleted = ({ commit }, { groupId }) => {
-    commit('clearCompleteTaskList', { groupId });
+    commit(type.CLEAR_COMPLETED_TASK, { groupId })
 }
 
 /**
@@ -69,27 +93,18 @@ const clearCompleted = ({ commit }, { groupId }) => {
  * @param id
  */
 const removeTask = ({ commit }, { id }) => {
-    if (!!id) {
-        commit('removeToTaskList', { id });
+    if (id) {
+        commit(type.removeTask, { id })
     }
 }
 
-const saveTask = ({ commit }, { payload, id }) => {
-    commit('saveTaskEdit', { payload, id })
-    commit('toggleTaskEdit', { id })
+const saveTask = ({ commit }, { id }) => {
+    // commit(type.SAVE_TASKS, { payload, id })
+    commit(type.TOOGLE_TASK, { id })
 }
 
-const clearAllEdit = ({commit, state}, {}) => {
-    commit('removeTasksEdit', {  })
-}
-
-/**
- *
- */
-const pushTasksPosition = ({commit}, { tasks }) => {
-    tasks.forEach((task, index) => {
-        commit('setTaskPosition', { id : task.id, position : index })
-    })
+const clearAllEdit = ({commit}) => {
+    commit(type.REMOVE_TASK, {  })
 }
 
 export default {
@@ -101,6 +116,6 @@ export default {
     clearAllEdit,
     addGroup,
     setCurrentGroup,
-    pushTasksPosition,
-    removeGroup
+    removeGroup,
+    loadData
 }
