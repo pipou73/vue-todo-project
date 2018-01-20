@@ -1,5 +1,6 @@
 import { findById } from '../api/index.js'
 import * as type from './mutations-type'
+import { getTasksByGrp } from './getters'
 /**
  * load store
  * @param {*} param0 
@@ -65,7 +66,6 @@ const setCurrentGroup = ({commit, state}, { id }) => {
     let group = findById(state.groups, id)
     if (group) {
         commit(type.SET_CURRENT_GROUP, { id })
-        commit(type.TOOGLE_GROUP, { id })
     }
 }
 
@@ -73,9 +73,14 @@ const setCurrentGroup = ({commit, state}, { id }) => {
  * @param commit
  * @param taskId
  */
-const completeTask = ({ commit }, { id }) => {
+const completeTask = ({ commit, state }, { id }) => {
     if (id) {
         commit(type.COMPLETED_TASK, { id })
+    }
+
+    const tasks = getTasksByGrp(state)({ id }).filter(() => task.completed)
+    if (!tasks.length) {
+        commit(type.COMPLETED_GROUP, { id })
     }
 }
 
@@ -99,12 +104,31 @@ const removeTask = ({ commit }, { id }) => {
 }
 
 const saveTask = ({ commit }, { id }) => {
-    // commit(type.SAVE_TASKS, { payload, id })
-    commit(type.TOOGLE_TASK, { id })
+    commit(type.TOGGLE_TASK_EDIT, { id })
+}
+
+const saveTasksByGroup = ({ commit }, { id }) => {
+    commit(type.SET_TASKS_BY_GROUP, { id })
+}
+
+const saveGroup = ({ commit }, { id }) => {
+    commit(type.TOGGLE_GROUP_EDIT, { id })
 }
 
 const clearAllEdit = ({commit}) => {
     commit(type.REMOVE_TASK, {  })
+}
+
+const clearGroup = ({commit}, { id }) => {
+    commit(type.CLEAR_GROUP, { id })
+}
+
+const toggleEditTask = ({commit}, { id }) => {
+    commit(type.TOGGLE_TASK_EDIT, { id })
+}
+
+const toggleEditGroup = ({commit}, { id }) => {
+    commit(type.TOGGLE_GROUP_EDIT, { id })
 }
 
 export default {
@@ -113,9 +137,14 @@ export default {
     removeTask,
     clearCompleted,
     saveTask,
+    saveTasksByGroup,
     clearAllEdit,
     addGroup,
     setCurrentGroup,
     removeGroup,
-    loadData
+    loadData,
+    clearGroup,
+    toggleEditTask,
+    toggleEditGroup,
+    saveGroup
 }

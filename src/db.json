@@ -6,7 +6,8 @@
             "completed": true,
             "edited": false,
             "group": "7ec00e82-d41f-11e7-a0e4-4dd6ca4d2af5",
-            "position": 0
+            "position": 0,
+            "show": true
         },
         {
             "id": "5cd2f471-d8c7-11e7-bd03-2bfa210668bb",
@@ -14,7 +15,26 @@
             "completed": false,
             "edited": false,
             "group": "7ec00e82-d41f-11e7-a0e4-4dd6ca4d2af5",
-            "position": 1
+            "position": 1,
+            "show": true
+        },
+        {
+            "id": "5cd2f470-d8c7-11e7-bd03-2bfa210668bs",
+            "title": "s'occuper des enfants",
+            "completed": true,
+            "edited": false,
+            "group": "5cd2f473-d8c7-11e7-bd03-2bfa210668bb",
+            "position": 0,
+            "show": true
+        },
+        {
+            "id": "5cd2f471-d8c7-11e7-bd03-2bfa210660bb",
+            "title": "Faire à manger",
+            "completed": false,
+            "edited": false,
+            "group": "5cd2f473-d8c7-11e7-bd03-2bfa210668bb",
+            "position": 1,
+            "show": true
         }
     ],
     "groups": [

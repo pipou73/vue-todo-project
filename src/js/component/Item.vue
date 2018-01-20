@@ -2,7 +2,7 @@
     <li :class="className('__item input-group')">
         <button v-if="!item.edited"
                 :class="addClass('__item__toggle')"
-                @click.self="$emit('complete')"
+                @click.self="$emit('selected');"
         >
             {{ item.title }}
         </button>
@@ -13,7 +13,7 @@
         </button>
 
         <button v-if="!item.completed && !item.edited" :class="className('__item__edit button warning')"
-                @click="$emit('edit')"
+                @click="$emit('toggleEdit')"
         >
             <i class="fa fa-edit" ></i>
         </button>
@@ -24,12 +24,12 @@
         >
         <div v-if="item.edited" class="input-group-button" >
             <button v-if="!item.completed && !item.edited" class="button warning"
-                    @click="$emit('edit')"
+                    @click="$emit('toggleEdit')"
             >
                 <i class="fa fa-edit" ></i>
             </button>
             <button v-if="item.edited" class="button success"
-                    @click="$emit('save', { title: item.title })"
+                    @click="$emit('save', { payload: item.title})"
             >
                 <i class="fa fa-save" ></i>
             </button>

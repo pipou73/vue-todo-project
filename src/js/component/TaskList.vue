@@ -4,12 +4,12 @@
             <input type="text"
                 class="input-group-field"
                 v-model="newTask"
-                @keyup.enter="addTask({ title : newTask, groupId : group.id })"
+                @keyup.enter="addTask({ title : newTask, groupId : group.id }); clearInput();"
                 placeholder="New task"
             >
             <span class="input-group-button">
                 <button
-                        @click="addTask({ title : newTask, groupId : group.id }), clearInput()"
+                        @click="addTask({ title : newTask, groupId : group.id }); clearInput();"
                         class="button"
                 >
                     <i class="fa fa-plus"></i> Add
@@ -23,7 +23,7 @@
                 <i class="fa fa-check"></i> Clear Completed
             </button>
             <button class="button alert small"
-                    @click="clearAllByGroup({groupId : group.id})"
+                    @click="$emit('clear', {id : task.id})"
             >
                 <i class="fa fa-trash"></i> Clear All
             </button>
@@ -32,8 +32,8 @@
             <transition-group name="fade" tag="ul" class="tasks__list no-bullet">
                 <item v-for="(task, index) in tasks"
                            @remove="removeTask({ id : task.id })"
-                           @complete="completeTask({ id : task.id })"
-                           @edit="toggleTaskEdit({ id : task.id })"
+                           @selected="completeTask({ id : task.id })"
+                           @toggleEdit="toggleEditTask({ id : task.id })"
                            @save="(payload) => {saveTask({ payload, id : task.id })}"
                            :item="task"
                            :base="'tasks'"
@@ -46,15 +46,12 @@
 <script>
     import Vue from 'vue';
     import Item from './Item.vue'
-    import uuidv1 from 'uuid/v1'
-    import store from '../store/index'
-    import { mapGetters, mapActions, mapMutations } from 'vuex'
+    import { mapGetters, mapActions } from 'vuex'
     import draggable from 'vuedraggable'
 
     export default Vue.component('task-list', {
         name: 'TaskList',
         template: '#task-list',
-        store,
         components: {
             Item,
             draggable,
@@ -68,18 +65,30 @@
         computed: {
             tasks: {
                 get() {
-                    //return this.tasksthis.$store.getters.getTasksByGrp({...this.group})
                     return this.tasksList;
                 },
                 set(value) {
-                    this.pushTasksPosition({ tasks : value});
+                    this.saveTasks({ tasks : value});
                 }
             }
         },
         methods: {
-            ...mapActions(['addTask', 'completeTask', 'removeTask', 'clearCompleted', 'saveTask', 'clearAllEdit', 'pushTasksPosition']),
-            ...mapGetters([ 'getTasksByGrp', 'inProgress', 'isCompleted', 'getCurrentGroupName', 'is']),
-            ...mapMutations([ 'clearAll', 'toggleTaskEdit', 'clearAllByGroup']),
+            ...mapActions([
+                'addTask',
+                'completeTask',
+                'removeTask',
+                'clearCompleted',
+                'saveTask',
+                'saveTasks',
+                'clearAllEdit',
+                'toggleEditTask'
+            ]),
+            ...mapGetters([
+                'getTasksByGrp',
+                'inProgress',
+                'isCompleted',
+                'getCurrentGroupName'
+            ]),
             clearInput () {
                 this.newTask = '';
             }

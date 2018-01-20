@@ -1,14 +1,11 @@
 <script>
     import Vue from 'vue';
     import App from './component/App.vue'
-//    import Draggable from './directive/draggable.js'
-//    import Dropzone from './directive/dropzone.js'
-//
-//    Vue.directive('draggable', Draggable)
-//    Vue.directive('dropzone', Dropzone)
+    import store from './store/index'
 
     new Vue({
         el: '#app',
+        store,
         render: h => h(App),
         components: {
             App

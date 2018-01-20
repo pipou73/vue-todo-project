@@ -8,10 +8,11 @@
                    class="input-group-field"
                    v-model="newGroup"
                    placeholder="New Group"
+                   @keyup.enter="addGroup({ title : newGroup }); clearInput();"
             >
             <!--@keyup.enter="addGroup"-->
             <span class="input-group-button">
-              <button @click="addGroup({ title : newGroup }), clearInput()"
+              <button @click="addGroup({ title : newGroup }); clearInput();"
                       class="button"
               >
                 <i class="fa fa-plus"></i> Add Group
@@ -25,7 +26,10 @@
                         <transition-group name="fade" tag="ul" class="groups__list no-bullet">
                             <item v-for="(group, index) in groups"
                                         @remove="removeGroup({ id : group.id })"
-                                        @complete="setCurrentGroup({ id : group.id })"
+                                        @selected="setCurrentGroup({ id : group.id })"
+                                        @clear="clearGroup({id : group.id})"
+                                        @toggleEdit="toggleEditGroup({ id : group.id })"
+                                        @save="(payload) => {saveGroup({ payload, id : group.id })}"
                                         :item="group"
                                         :base="'groups'"
                                         :key="index"
@@ -35,7 +39,7 @@
                 </div>
                 <div class="col-md-6">
                     <div v-if="currentGroup" >
-                        <task-list 
+                        <task-list
                         :group="currentGroup"
                         :tasksList="getTasksByGroup(currentGroup)"
                         ></task-list>
@@ -49,15 +53,12 @@
 import Vue from 'vue';
 import TaskList from './TaskList.vue'
 import Item from './Item.vue'
-import uuidv1 from 'uuid/v1'
-import store from '../store/index'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import draggable from 'vuedraggable'
 
 export default Vue.component('grp-list', {
     name: 'GrpList',
     template: '#grp-list',
-    store,
     data() {
         return {
             newGroup: '',
@@ -80,14 +81,28 @@ export default Vue.component('grp-list', {
                 return this.getGroups()
             },
             set(value) {
-                this.$store.commit('updateGroupList', value)
+                this.$store.commit(' setTasksByGroup', value)
             }
         }
     },
     methods: {
-        ...mapActions([ 'addGroup', 'setCurrentGroup', 'removeGroup', 'loadData']),
-        ...mapGetters([ 'isLoading', 'getCurrentGroupName', 'getGroups', 'getCurrentGroup', 'getTasksByGrp']),
-        ...mapMutations([ 'clearAllByGroup']),
+        ...mapActions([
+            'addGroup',
+            'setCurrentGroup',
+            'removeGroup',
+            'loadData',
+            'clearGroup',
+            'toggleEditGroup',
+            'saveGroup',
+            'saveTasksByGroup'
+        ]),
+        ...mapGetters([
+            'isLoading',
+            'getCurrentGroupName',
+            'getGroups',
+            'getCurrentGroup',
+            'getTasksByGrp'
+        ]),
         clearInput () {
             this.newGroup = '';
         },

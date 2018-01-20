@@ -12,7 +12,7 @@ const getTasks = (state) => {
  * @param state
  * @returns {function({id: *}): Array.<*>}
  */
-const  getTasksByGrp = (state) => {
+export const  getTasksByGrp = (state) => {
     return ({id}) => state.tasks.filter(item => {
         return item.group === id
     }).sort((a, b) => a.position > b.position)
