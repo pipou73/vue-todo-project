@@ -4,24 +4,24 @@ import Vuex from 'vuex'
 import getters from './getters'
 import actions from './actions'
 import mutations from './mutations'
-// import * as getters from './getters'
-// import * as actions from './actions'
-// import * as mutations from './mutations'
+import tasks from './modules/tasks'
+import groups from './modules/groups'
 
 Vue.use(Vuex)
 
 const state = {
     loading: false,
-    currentGroup: '7ec00e82-d41f-11e7-a0e4-4dd6ca4d2af5',
-    tasks: [],
-    groups: []
 }
 
 const store = new Vuex.Store({
     state,
     getters,
     actions,
-    mutations
+    mutations,
+    modules: {
+        tasks,
+        groups
+    }
 })
 
 // if (module.hot) {

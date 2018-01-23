@@ -1,74 +1,52 @@
-<template id="item">
-    <li :class="className('__item input-group')">
-        <button v-if="!item.edited"
-                :class="addClass('__item__toggle')"
-                @click.self="$emit('selected');"
-        >
-            {{ item.title }}
-        </button>
-        <button  v-if="!item.edited" :class="className('__item__remove button alert pull-right')"
-                 @click="$emit('remove')"
-        >
-            <i class="fa fa-times"></i>
-        </button>
-
-        <button v-if="!item.completed && !item.edited" :class="className('__item__edit button warning')"
-                @click="$emit('toggleEdit')"
-        >
-            <i class="fa fa-edit" ></i>
-        </button>
-
-        <input v-if="item.edited" type="text"
-               class="input-group-field"
-               v-model="item.title"
-        >
-        <div v-if="item.edited" class="input-group-button" >
-            <button v-if="!item.completed && !item.edited" class="button warning"
+<template>
+    <li :class="className('list-group-item pointer margin-bottom-4')">
+        <div style="float: right">
+            <button  v-if="!item.edited" class="btn btn-xs btn-danger pull-right margin-left-4"
+                     @click="$emit('remove')"
+            >
+                <i class="fa fa-times"></i>
+            </button>
+            <button v-if="!item.completed && item.edited" class="btn btn-xs btn-warning margin-left-4"
                     @click="$emit('toggleEdit')"
             >
                 <i class="fa fa-edit" ></i>
             </button>
-            <button v-if="item.edited" class="button success"
+            <button v-if="!item.completed && !item.edited" class="btn btn-xs btn-warning margin-left-4"
+                    @click="$emit('toggleEdit')"
+            >
+                <i class="fa fa-edit" ></i>
+            </button>
+            <button v-if="item.edited" class="btn btn-xs btn-success margin-left-4"
                     @click="$emit('save', { payload: item.title})"
             >
                 <i class="fa fa-save" ></i>
             </button>
         </div>
+        <div v-if="!item.edited" @click.self="$emit('selected');" >
+            {{ item.title }}
+        </div>
+        <input v-if="item.edited" type="text"
+               class="form-control"
+               style="width: 85% !important"
+               v-model="item.title"
+        >
     </li>
 </template>
-
 <script>
-    import Vue from 'vue';
-
-    export default Vue.component('item', {
+    export default {
         name: 'Item',
         template: '#item',
-        props: ['item', 'base'],
+        props: ['item', 'isSelected', 'addClass'],
         methods: {
             sendTask (e, item) {
                 this.$emit('save', { title : this.item.title, edited : false });
             },
             className(cls) {
-                let classes = [];
-                classes.push(this.base + cls);
-
-                return classes.join(' ');
-            },
-            addClass(cls) {
-                let classes = [];
-                classes.push(this.className(cls));
-
-                if (this.item.show) {
-                    classes.push(this.base + '__item__toggle--selected');
+                if (this.isSelected) {
+                    return cls + ' ' + this.addClass;
                 }
-
-                if (this.item.completed) {
-                    classes.push(this.base + '__item__toggle--completed');
-                }
-
-                return classes.join(' ');
+                return cls;
             }
         }
-
-    });
+    };
 </script>
